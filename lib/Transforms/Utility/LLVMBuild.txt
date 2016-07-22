@@ -1,4 +1,4 @@
-;===- ./lib/Transforms/IPO/LLVMBuild.txt -----------------------*- Conf -*--===;
+;===- ./lib/Transforms/Scalar/LLVMBuild.txt --------------------*- Conf -*--===;
 ;
 ;                     The LLVM Compiler Infrastructure
 ;
@@ -17,7 +17,7 @@
 
 [component_0]
 type = Library
-name = IPO
+name = Utility
 parent = Transforms
-library_name = ipo
-required_libraries = Analysis Core InstCombine IRReader Linker Object ProfileData Scalar Support TransformUtils Vectorize Instrumentation Utility
+library_name = Utility
+required_libraries = Linker IRReader
