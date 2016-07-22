@@ -57,6 +57,45 @@ namespace {
 				func_puts_PAL = AttributeSet::get(mod->getContext(), Attrs);
 			}
 			func_puts->setAttributes(func_puts_PAL);
+
+			// prerequisites for const_ptr_10
+			PointerType* PointerTy_3 = PointerType::get(IntegerType::get(mod->getContext(), 8), 0);
+			std::vector<Type*>FuncTy_5_args;
+			FuncTy_5_args.push_back(PointerTy_3);
+			FunctionType* FuncTy_5 = FunctionType::get(/*Result=*/IntegerType::get(mod->getContext(), 32),
+														/*Params=*/FuncTy_5_args,
+														/*isVarArg=*/true);
+			PointerType* PointerTy_4 = PointerType::get(FuncTy_5, 0);
+			Constant* const_ptr_10 = ConstantExpr::getCast(Instruction::BitCast, func_puts, PointerTy_4);
+
+			// prerequisites for const_ptr_8
+			char *msg;
+			asprintf(&msg, "Executing: %s", F.getName().bytes_begin());
+			
+			ArrayType* ArrayTy_0 = ArrayType::get(IntegerType::get(mod->getContext(), 8), strlen(msg)+1);
+			GlobalVariable* gvar_array__str = new GlobalVariable(/*Module=*/*mod,
+																/*Type=*/ArrayTy_0,
+																/*isConstant=*/true,
+																/*Linkage=*/GlobalValue::PrivateLinkage,
+																/*Initializer=*/0, // has initializer, specified below
+																/*Name=*/".str");
+			gvar_array__str->setAlignment(1);
+
+			Constant *const_array_7 = ConstantDataArray::getString(mod->getContext(), msg, true);
+			std::vector<Constant*> const_ptr_8_indices;
+			ConstantInt* const_int32_9 = ConstantInt::get(mod->getContext(), APInt(32, StringRef("0"), 10));
+			const_ptr_8_indices.push_back(const_int32_9);
+			const_ptr_8_indices.push_back(const_int32_9);
+			Constant* const_ptr_8 = ConstantExpr::getGetElementPtr(0, gvar_array__str, const_ptr_8_indices);
+			gvar_array__str->setInitializer(const_array_7);
+
+			CallInst* int32_call = CallInst::Create(const_ptr_10, const_ptr_8, "call");
+			int32_call->setCallingConv(CallingConv::C);
+			int32_call->setTailCall(false);
+			AttributeSet int32_call_PAL;
+			int32_call->setAttributes(int32_call_PAL);
+
+			F.getEntryBlock().getInstList().push_front(int32_call);
 			return false;
 		}
 	};
